@@ -106,48 +106,65 @@
   </div>
 
   <script>
+    // 50 întrebări UNICE (natură + vânătoare responsabilă/siguranță/igienă)
     const QUESTIONS = [
-      { text: "Iepurele de câmp (Lepus europaeus) se odihnește frecvent ziua într-o:", options: ["Vizuina săpată adânc (warren)", "Scorbura unui copac", "Vizuină împrumutată de la vulpe", "Depresiune superficială în sol/iarbă („formă”)"], correct: 3 },
-      { text: "Iepurele european (Oryctolagus cuniculus) este cunoscut pentru:", options: ["Viață exclusiv în copaci", "Săparea rețelelor de vizuini („warrens”)", "Înot constant în lacuri", "Hibernare iarna"], correct: 1 },
-      { text: "Care dintre cele două este mai renumit pentru viața socială în colonii și folosirea comună a vizuinilor?", options: ["Iepurele european (Oryctolagus cuniculus)", "Iepurele de câmp (Lepus europaeus)", "Ambele identic", "Niciuna"], correct: 0 },
-      { text: "Cum sunt, în general, puii de iepure de câmp (leverets) la naștere?", options: ["Orbi și fără blană", "Cu ochii deschiși și cu blană", "Născuți în apă", "Eclozează din ouă"], correct: 1 },
-      { text: "Cum sunt, în general, puii de iepure (kittens) la naștere?", options: ["Cu ochii deschiși și alergând imediat", "Orbi și aproape fără blană, în cuib/vizuină", "Născuți în copaci", "Independenți din prima zi"], correct: 1 },
-      { text: "Habitatul tipic pentru iepurele de câmp (Lepus europaeus) este adesea:", options: ["Păduri foarte dese", "Câmpuri deschise/pășuni, adesea lângă garduri vii și liziere", "Peșteri montane", "Zone exclusiv urbane"], correct: 1 },
-      { text: "Un habitat frecvent preferat de iepurele european pentru a-și săpa vizuini include:", options: ["Sol moale/nisipos și zone relativ uscate", "Stâncă masivă fără sol", "Pajiști mlăștinoase permanente", "Ghețari"], correct: 0 },
-      { text: "În general, iepurii și iepurii de câmp tind să fie mai activi:", options: ["La prânz, în plin soare", "Mai ales seara/noaptea (crepuscular/nocturn)", "Doar iarna", "Doar în timpul furtunilor"], correct: 1 },
-      { text: "Dieta lor în natură este în principal:", options: ["Carnivoră", "Herbivoră (ierburi, plante, frunze)", "Exclusiv insectivoră", "Exclusiv piscivoră"], correct: 1 },
-      { text: "Iarna, iepurele de câmp poate completa dieta cu:", options: ["Carne de mici mamifere", "Crenguțe, muguri și scoarță", "Numai fructe tropicale", "Doar semințe de floarea-soarelui"], correct: 1 },
-      { text: "O strategie comună de apărare a iepurelui european împotriva prădătorilor este:", options: ["Să se ascundă în vizuini și să fugă spre acoperire", "Să atace în haită", "Să se camufleze schimbând culoarea pielii instant", "Să rămână nemișcat în apă"], correct: 0 },
-      { text: "Ce adaptare ajută iepurele de câmp să scape în teren deschis?", options: ["Picioare lungi și alergare rapidă de anduranță", "Gheare pentru cățărat", "Aripi", "Blană impermeabilă pentru scufundări"], correct: 0 },
-      { text: "Un indiciu de identificare frecvent pentru iepurele de câmp este:", options: ["Urechi fără vârfuri întunecate", "Urechi mai scurte decât capul", "Vârfuri negre la urechi (la multe populații)", "Coarne"], correct: 2 },
-      { text: "De ce sunt vizuinile („warrens”) importante pentru iepuri?", options: ["Pentru că produc hrană", "Ca adăpost contra prădătorilor și pentru creșterea puilor", "Pentru că încălzesc aerul", "Pentru că înlocuiesc apa"], correct: 1 },
-      { text: "Comportamentul numit „boxing”, observat la iepurele de câmp primăvara, este asociat cel mai des cu:", options: ["Hibernarea", "Interacțiuni din sezonul de reproducere (alergări, competiție)", "Construirea vizuinilor", "Înotul"], correct: 1 },
+      // 1–18: biologie, diferențe, habitat, comportament
+      { text: "În general, ce diferență clasică există între iepure (rabbit) și iepure de câmp (hare)?", options: ["Harele își face cuib în copac", "Harele se bazează mai mult pe viteză și „forms”, nu pe vizuini complexe", "Iepurele hibernează, harele nu", "Iepurele este carnivor"], correct: 1 },
+      { text: "Iepurele european (Oryctolagus cuniculus) este cunoscut în natură pentru:", options: ["Rețele de vizuini (warrens)", "Viață exclusiv acvatică", "Cuiburi suspendate", "Hibernare profundă"], correct: 0 },
+      { text: "Iepurele de câmp se odihnește frecvent ziua într-o:", options: ["Vizuina adâncă săpată", "Depresiune superficială în sol/iarbă („formă”)", "Scorbura unui copac", "Cuib plutitor"], correct: 1 },
+      { text: "Care dintre opțiuni descrie cel mai bine activitatea zilnică a iepurilor/iepurilor de câmp?", options: ["Predominant diurnă la prânz", "Crepusculară/nocturnă (mai activi seara/noaptea)", "Doar dimineața devreme, apoi hibernează", "Doar în timpul furtunilor"], correct: 1 },
+      { text: "Dieta naturală tipică pentru iepuri și iepuri de câmp este:", options: ["Preponderent carnivoră", "Preponderent erbivoră (ierburi/plante)", "Exclusiv insectivoră", "Exclusiv piscivoră"], correct: 1 },
+      { text: "În sezon rece, iepurele de câmp poate consuma mai mult:", options: ["Scoarță, muguri și lăstari", "Doar fructe tropicale", "Doar pește", "Exclusiv ciuperci toxice"], correct: 0 },
+      { text: "Ce rol au urechile mari la iepuri/iepurii de câmp în natură?", options: ["Doar pentru echilibru la sărituri", "Detectarea prădătorilor (auz) și termoreglare", "Pentru a speria prădătorii prin culoare", "Pentru a săpa vizuini"], correct: 1 },
+      { text: "Care afirmație e cea mai probabilă despre habitatul iepurelui de câmp?", options: ["Preferă câmpuri/pajiști, adesea lângă margini de vegetație (gard viu/lizieră)", "Trăiește doar în păduri dese tropicale", "Trăiește exclusiv pe stânci fără vegetație", "Trăiește doar în peșteri"], correct: 0 },
+      { text: "De ce sunt importante marginea de câmp, tufărișul și gardurile vii pentru iepurele de câmp?", options: ["Oferă acoperire și rute de deplasare", "Îl obligă să hiberneze", "Îi elimină hrana", "Îl fac să trăiască în apă"], correct: 0 },
+      { text: "Când un iepure stă nemișcat și se bazează pe camuflaj, acesta este un exemplu de:", options: ["Apărare prin cripticitate (camuflaj)", "Comportament de vânătoare activă", "Hibernare", "Migrație"], correct: 0 },
+      { text: "Comportamentul numit „boxing” la iepurele de câmp este asociat mai ales cu:", options: ["Sezonul de reproducere și interacțiuni între indivizi", "Construirea vizuinilor", "Înotul în grup", "Hibernarea"], correct: 0 },
+      { text: "Care adaptare ajută iepurele de câmp în teren deschis?", options: ["Picioare lungi pentru alergare rapidă și evaziune", "Gheare pentru cățărat în copaci", "Aripi", "Branhii"], correct: 0 },
+      { text: "În general, iepurii (rabbits) sunt mai cunoscuți pentru:", options: ["Viață socială mai pronunțată și folosirea vizuinilor comune", "Viață exclusiv solitară fără adăpost", "Hibernare în colonii", "Hrănire exclusiv cu insecte"], correct: 0 },
+      { text: "Care afirmație despre puii de iepure de câmp (leverets) e corectă, în mod general?", options: ["Se nasc orbi și fără blană", "Se nasc cu ochii deschiși și cu blană", "Sunt depuși în ouă", "Sunt complet independenți după 10 minute"], correct: 1 },
+      { text: "Care afirmație despre puii de iepure (kits/kittens) e corectă, în mod general?", options: ["Se nasc orbi și aproape fără blană, în cuib/vizuină", "Se nasc cu ochii deschiși și aleargă imediat", "Se nasc în apă", "Sunt întotdeauna abandonați"], correct: 0 },
+      { text: "Dacă găsești un leveret aparent singur, o explicație posibil normală este:", options: ["Mama îl lasă ascuns și revine periodic să îl hrănească", "Este abandonat sigur", "Nu are mamă", "Este deja adult"], correct: 0 },
+      { text: "De ce intervenția „din milă” asupra unui leveret aparent sănătos poate fi greșită?", options: ["Poate fi normal să stea ascuns; intervenția poate crește stresul și riscul", "Pentru că levereții sunt periculoși", "Pentru că nu există levereți", "Pentru că mama nu revine niciodată"], correct: 0 },
+      { text: "Un rol ecologic comun al iepurilor/iepurilor de câmp este:", options: ["Pradă importantă pentru prădători și influențarea vegetației", "Prădător de vârf al ecosistemului", "Fără rol în lanțul trofic", "Consumator exclusiv de pești"], correct: 0 },
 
-      { text: "În tiparul urmelor de iepure/iepure de câmp în zăpadă, de regulă:", options: ["Urmele din spate rămân mereu în spatele celor din față", "Urmele din spate cad înaintea celor din față (salt/leapfrog)", "Se vede mereu o urmă de coadă", "Apar doar 2 urme per săritură"], correct: 1 },
-      { text: "Un set tipic de urme de iepure/iepure de câmp la deplasare (salt) apare adesea ca:", options: ["4 amprente (2 față + 2 spate)", "1 amprentă mare", "6 amprente fixe", "Doar urme de coadă"], correct: 0 },
-      { text: "Excrementele de iepure european sunt, de obicei:", options: ["Fire lungi ca la vulpe", "Peleți mici, adesea sub 1 cm", "Lichide fără formă", "Bucăți mari ovale de 5 cm"], correct: 1 },
-      { text: "Dauna tipică de iepure pe lăstari tineri/vegetatie poate fi recunoscută prin:", options: ["Rupere zdrențuită", "Tăietură curată, adesea în unghi", "Arsuri pe scoarță", "Găuri perfect circulare"], correct: 1 },
-      { text: "O diferență folosită des pentru a distinge dauna de iepure față de cea de cerb este că iepurele:", options: ["Taie mai curat, cerbul rupe mai neregulat", "Lasă întotdeauna urme de dinți pe metal", "Mănâncă doar frunze uscate", "Nu produce niciodată urme"], correct: 0 },
-      { text: "Un indiciu că o zonă este folosită frecvent de iepuri poate fi:", options: ["Absența totală a vegetației", "Latrine cu peleți și intrări de vizuină în apropiere", "Doar pene de pasăre", "Doar urme de copite"], correct: 1 },
-      { text: "„Forma” (form) la iepurele de câmp este cel mai corect descrisă ca:", options: ["Un tunel adânc de 20 m", "Un cuib în copac", "O depresiune superficială unde se culcă și se camuflează", "O vizuină sub apă"], correct: 2 },
-      { text: "În general, care urme tind să fie mai mari în setul de urme (salt)?", options: ["Cele din față", "Cele din spate", "Sunt identice", "Nu se pot compara"], correct: 1 },
-      { text: "Dacă găsești multe peleți împrăștiați și tăieturi proaspete pe vegetație, o interpretare rezonabilă este:", options: ["Activitate recentă de hrănire în zonă", "Prezență sigură de lup", "Cutremur recent", "Nu spune nimic"], correct: 0 },
-      { text: "Urmele sunt cel mai ușor de observat pentru iepuri/iepuri de câmp, de obicei, în:", options: ["Zăpadă sau noroi umed", "Asfalt uscat", "Aer", "Apă limpede"], correct: 0 },
+      // 19–28: urme, semne, identificare în teren
+      { text: "În urmele tipice de sărit (salt) la iepure/hare, de obicei:", options: ["Urmele din spate cad înaintea celor din față", "Urmele din față cad înaintea celor din spate mereu", "Se vede o singură urmă", "Se vede urma cozii în mod constant"], correct: 0 },
+      { text: "Un set clasic de urme de iepure/hare la deplasare arată adesea:", options: ["4 amprente (2 față + 2 spate)", "2 amprente identice", "6 amprente fixe", "O urmă continuă de coadă"], correct: 0 },
+      { text: "Unde vezi cel mai ușor urmele proaspete ale iepurilor?", options: ["Zăpadă, noroi umed, praf fin", "Asfalt uscat lucios", "Apă foarte adâncă", "În aer"], correct: 0 },
+      { text: "Excrementele tipice de iepure sunt descrise cel mai des ca:", options: ["Peleți mici și rotunzi/ovalizați", "Fire lungi, torsionate", "Excremente lichide", "Bucăți mari de 5–10 cm"], correct: 0 },
+      { text: "Un indiciu de prezență repetată într-o zonă poate fi:", options: ["Concentrații de peleți (latrine) și poteci (runways)", "Doar pene de pasăre", "Doar urme de copite", "Lipsa totală a oricăror semne"], correct: 0 },
+      { text: "Semnul de hrănire numit „browse” pe lăstari tineri poate arăta:", options: ["Tăietură relativ curată, adesea în unghi", "Rupere foarte zdrențuită ca după furtună", "Arsură pe scoarță", "Găuri perfect circulare ca burghiul"], correct: 0 },
+      { text: "Ce înseamnă, de regulă, „runways” pentru iepuri?", options: ["Poteci înguste folosite repetat prin iarbă/vegetatie", "Tuneluri subacvatice", "Drumuri asfaltate", "Trasee exclusiv în copaci"], correct: 0 },
+      { text: "„Formă” (form) în contextul iepurelui de câmp înseamnă:", options: ["O depresiune superficială de odihnă/camuflaj", "O vizuină complexă cu mai multe camere", "Un cuib suspendat", "O gaură în gheață"], correct: 0 },
+      { text: "Când identifici o specie în teren, ce abordare e cea mai responsabilă?", options: ["Te bazezi pe o singură caracteristică", "Folosești mai multe indicii: dimensiune, urechi, habitat, comportament, urme", "Presupui mereu că e specia vânată", "Ignori complet habitatul"], correct: 1 },
+      { text: "Un motiv bun să eviți presupunerile la identificare este:", options: ["Unele specii pot fi protejate sau au reguli diferite", "Pentru că toate speciile au aceleași reguli", "Pentru că nu contează legal", "Pentru că se schimbă anotimpul"], correct: 0 },
 
-      { text: "Myxomatosis este o boală cauzată de:", options: ["Un parazit intestinal", "Myxoma virus (poxvirus)", "O ciupercă de pădure", "Deficit de vitamine"], correct: 1 },
-      { text: "Rabbit haemorrhagic disease (RHD) este cauzată de:", options: ["Calicivirus (Lagovirus)", "Bacterie din sol", "Viermi intestinali", "Polen"], correct: 0 },
-      { text: "Iepurii și iepurii de câmp sunt, în mod tipic, pradă pentru:", options: ["Vulpi și păsări răpitoare (printre altele)", "Doar pești", "Doar insecte", "Nimeni"], correct: 0 },
-      { text: "RSPCA menționează că levereții (puii de iepure de câmp) pot fi găsiți singuri deoarece:", options: ["Sunt abandonați definitiv", "Mama îi lasă ascunși și revine să îi hrănească", "Se hrănesc singuri din prima oră", "Nu au mamă"], correct: 1 },
+      // 29–36: boli, sănătate publică, prădători, populații
+      { text: "Myxomatosis (la iepuri) este cauzată de:", options: ["Virus (poxvirus)", "Deficit de minerale", "Ciupercă de pădure", "Intoxicație cu sare"], correct: 0 },
+      { text: "Rabbit haemorrhagic disease (RHD/RHDV) este asociată cu:", options: ["Un calicivirus (lagovirus)", "Bacterie din apă dulce", "Parazit extern (căpușă)", "Alergie la polen"], correct: 0 },
+      { text: "De ce bolile pot influența mult populațiile de iepuri în natură?", options: ["Pot crește mortalitatea și reduce reproducerea", "Nu au niciun efect", "Fac iepurii invizibili", "Elimină nevoia de hrană"], correct: 0 },
+      { text: "Care este un exemplu comun de prădători pentru iepuri/iepurii de câmp (în funcție de regiune)?", options: ["Vulpi și păsări răpitoare", "Doar pești", "Doar insecte", "Nu au prădători naturali"], correct: 0 },
+      { text: "Un semn că un animal poate fi bolnav și ar trebui evitat la manipulare este:", options: ["Comportament anormal, apatie, leziuni evidente", "Blană curată și alertă", "Fuga rapidă", "Urechi ridicate și vigilente"], correct: 0 },
+      { text: "Tularemia (risc la iepure de vânat) este asociată adesea cu:", options: ["Bacterie și expunere prin manipulare/consum insuficient gătit", "Doar gripă sezonieră", "Doar arsuri solare", "Doar alergii alimentare"], correct: 0 },
+      { text: "Măsură bună când manipulezi vânat (igienă) este:", options: ["Mănuși + spălat mâini/unelte după curățare", "Mănânci în timp ce cureți vânatul", "Nu cureți uneltele niciodată", "Atingi fața/ochii cu mâinile murdare"], correct: 0 },
+      { text: "O recomandare generală pentru reducerea riscului alimentar la carnea de vânat este:", options: ["Gătire temeinică și păstrare la rece", "Consum crud ca să fie „mai natural”", "Ținută la cald ore întregi", "Spălată doar cu apă și gata"], correct: 0 },
 
-      { text: "O regulă primară de siguranță la armă este:", options: ["Ține țeava îndreptată într-o direcție sigură", "Ține țeava în orice direcție", "Deget pe trăgaci mereu", "Nu verifica arma"], correct: 0 },
-      { text: "Regula „be sure of your target and what’s beyond” înseamnă:", options: ["Ești sigur de țintă și ce e dincolo înainte să tragi", "Tragi la orice mișcare", "Tragi doar în sus", "Ținta nu contează"], correct: 0 },
-      { text: "De ce se poartă blaze (hunter) orange?", options: ["Ca să te vadă alți vânători și să reducă riscul de accident", "Ca să sperii animalele", "Ca să nu mai ai nevoie de hartă", "Ca să crească viteza"], correct: 0 },
-      { text: "Pentru a reduce riscul de tularemie când manipulezi iepuri, se recomandă:", options: ["Să porți mănuși când manipulezi/curăți vânatul", "Să mănânci carnea crudă", "Să nu speli mâinile", "Să atingi ochii cu mâna murdară"], correct: 0 },
-      { text: "O recomandare de sănătate publică la carnea de vânat este:", options: ["Să fie gătită temeinic", "Să fie consumată crudă", "Să fie ținută la cald zile întregi", "Să fie spălată doar cu apă rece"], correct: 0 },
-
-      /* Pentru a păstra mesajul scurt, aici am lăsat 35/50 în exemplu.
-         În fișierul tău, păstrează restul întrebărilor din varianta anterioară (cele care lipsesc)
-         EXACT în același format, iar randomizarea se aplică tuturor automat. */
+      // 37–50: vânătoare responsabilă (siguranță, etică, legal, practici)
+      { text: "Regula de bază: cum tratezi orice armă, indiferent de situație?", options: ["Ca și cum ar fi încărcată", "Ca și cum ar fi o jucărie", "Ca și cum nu poate trage", "Ca și cum nu are țeavă"], correct: 0 },
+      { text: "Controlul țevii (muzzle control) înseamnă:", options: ["Țeava îndreptată mereu într-o direcție sigură", "Țeava spre sol și oameni, ca să fie stabil", "Țeava în sus în orice situație", "Țeava spre țintă înainte să identifici"], correct: 0 },
+      { text: "Disciplina trăgaciului înseamnă:", options: ["Degetul în afara trăgaciului până ești gata să tragi", "Degetul pe trăgaci tot timpul", "Apeși trăgaciul pentru test", "Nu folosești niciodată trăgaciul"], correct: 0 },
+      { text: "Regula „sigur de țintă și ce e dincolo” (target & beyond) cere:", options: ["Să identifici clar ținta și să ai fundal/backstop sigur", "Să tragi la mișcare", "Să tragi dacă auzi sunet", "Să tragi doar în sus"], correct: 0 },
+      { text: "Dacă vezi doar o siluetă/mișcare în vegetație, cea mai sigură decizie este:", options: ["Nu tragi până nu identifici complet", "Tragi rapid înainte să fugă", "Strigi și tragi", "Tragi după sunet"], correct: 0 },
+      { text: "De ce se folosește „blaze orange” în multe contexte de vânătoare?", options: ["Crește vizibilitatea între oameni și reduce accidentele", "Sperie toate animalele prin magie", "Îți dă noroc", "Îți încălzește corpul"], correct: 0 },
+      { text: "La trecerea peste obstacole (garduri/șanțuri), o practică de siguranță este:", options: ["Să descarci/controlezi arma și să o manevrezi în siguranță", "Să sari cu arma încărcată și degetul pe trăgaci", "Să arunci arma peste gard", "Să lași arma pe sol fără control"], correct: 0 },
+      { text: "Etică („fair chase”) înseamnă cel mai bine:", options: ["Să respecți șanse rezonabile pentru vânat și să eviți avantaje neloiale/periculoase", "Să faci orice ca să ai 100% succes", "Să vânezi doar din mașină", "Să ignori recuperarea vânatului"], correct: 0 },
+      { text: "O decizie etică privind tragerea este:", options: ["Nu tragi dacă nu poți asigura o recoltare rapidă și umană", "Tragi oricum, poate nimerești", "Tragi la distanțe necontrolate", "Tragi fără fundal"], correct: 0 },
+      { text: "După o lovire, responsabilitatea vânătorului este:", options: ["Să urmărească și să recupereze vânatul cât mai prompt", "Să plece imediat acasă", "Să ignore locul", "Să caute alt vânat fără verificare"], correct: 0 },
+      { text: "De ce trebuie verificată legislația locală (sezon/cote/metode)?", options: ["Pentru legalitate și managementul durabil al faunei", "Nu e necesar niciodată", "Doar pentru tradiție", "Ca să schimbi vremea"], correct: 0 },
+      { text: "Pe teren privat, regula generală este:", options: ["Ai nevoie de permisiunea proprietarului/administratorului", "Poți intra oricând fără acord", "Doar faci o poză și e ok", "Îți ajunge o hartă"], correct: 0 },
+      { text: "O regulă bună de siguranță legată de alcool/substanțe înainte de vânătoare este:", options: ["Evită complet — afectează judecata și reflexele", "E ok în cantități mari", "Ajută la țintire", "E obligatoriu pentru concentrare"], correct: 0 },
+      { text: "O practică responsabilă cu deșeurile după vânătoare este:", options: ["Nu lași gunoaie și respecți mediul (Leave No Trace)", "Lași cartușe și ambalaje pe jos", "Arunci orice în apă", "Ascunzi gunoaiele sub frunze"], correct: 0 }
     ];
 
     // === RANDOM puternic (crypto) ===
@@ -157,7 +174,6 @@
       if (!cryptoObj || !cryptoObj.getRandomValues) {
         return Math.floor(Math.random() * maxExclusive);
       }
-      // evităm bias-ul: rejection sampling
       const range = 0x100000000; // 2^32
       const limit = range - (range % maxExclusive);
       const buf = new Uint32Array(1);
@@ -183,7 +199,7 @@
       }[c]));
     }
 
-    const state = { rendered: [], answeredCount: 0, submitted: false };
+    const state = { rendered: [], answeredCount: 0, submitted: false, total: 50 };
 
     const elQuestions = document.getElementById("questions");
     const elProgress = document.getElementById("progress");
@@ -193,7 +209,7 @@
     const resetBtn = document.getElementById("resetBtn");
 
     function updateProgress(){
-      elProgress.textContent = `Completate: ${state.answeredCount}/50`;
+      elProgress.textContent = `Completate: ${state.answeredCount}/${state.total}`;
     }
 
     function countAnswered(){
@@ -209,10 +225,9 @@
       document.querySelectorAll(".card.missing").forEach(c => c.classList.remove("missing"));
     }
 
-    // Construiește întrebările RANDOM de fiecare dată:
     // 1) shuffle întrebări
-    // 2) shuffle opțiuni pe fiecare întrebare
-    // 3) păstrează indexul corect intern
+    // 2) shuffle opțiuni per întrebare
+    // 3) corectul se păstrează prin flag isCorrect
     function buildRenderedQuestions(){
       const qList = QUESTIONS.map(q => {
         const opts = q.options.map((t, i) => ({ text: t, isCorrect: i === q.correct }));
@@ -227,10 +242,7 @@
     function render(){
       elQuestions.innerHTML = "";
       state.rendered = buildRenderedQuestions();
-
-      // IMPORTANT: dacă ai EXACT 50 întrebări în array, progresul va fi /50.
-      // Dacă ai mai puține, actualizează automat aici:
-      const total = state.rendered.length;
+      state.total = state.rendered.length; // ar trebui să fie 50
 
       state.rendered.forEach((item, idx) => {
         const card = document.createElement("div");
@@ -244,7 +256,6 @@
 
         const fs = document.createElement("fieldset");
         fs.setAttribute("role","radiogroup");
-        fs.dataset.qIndex = idx;
 
         item.options.forEach((opt, oIdx) => {
           const optId = `q_${idx}_opt_${oIdx}`;
@@ -288,9 +299,8 @@
         elQuestions.appendChild(card);
       });
 
-      // resetează progres / total
       state.answeredCount = 0;
-      elProgress.textContent = `Completate: 0/${total}`;
+      updateProgress();
     }
 
     function validateAllAnswered(){
@@ -367,7 +377,7 @@
       document.getElementById("questions").classList.remove("disabled");
       elScoreCard.style.display = "none";
       clearMissingMarks();
-      render(); // <- AICI se regenerează cu ordine RANDOM nouă
+      render(); // random nou
       window.scrollTo({top:0, behavior:"smooth"});
     }
 
@@ -378,7 +388,7 @@
       if (!validateAllAnswered()) return;
 
       const score = computeScore();
-      const total = state.rendered.length;
+      const total = state.total;
 
       elScoreText.textContent = `${score} / ${total}`;
       elScoreCard.style.display = "block";
@@ -390,7 +400,7 @@
 
     resetBtn.addEventListener("click", () => unlockAndReset());
 
-    // Random la fiecare încărcare a paginii:
+    // random la fiecare încărcare:
     render();
   </script>
 </body>
