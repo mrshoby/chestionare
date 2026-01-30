@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chestionar Munte (50)</title>
+  <style>
+    :root{
+      --bg:#f1f3f4; --card:#ffffff; --text:#202124; --muted:#5f6368;
+      --accent:#2563eb; --accent-2:#06b6d4; --danger:#d93025; --ok:#1e8e3e;
+      --border:#dadce0; --shadow:0 1px 2px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.06);
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.35;}
+    .wrap{max-width:900px;margin:28px auto 64px;padding:0 14px;}
+    .header{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:var(--card);border:1px solid var(--border);margin-bottom:16px;}
+    .topbar{height:10px;background:linear-gradient(90deg,var(--accent),var(--accent-2));}
+    .head-body{padding:18px 18px 14px;}
+    h1{margin:0 0 6px;font-size:22px;font-weight:750;}
+    .subtitle{color:var(--muted);font-size:14px;margin:0 0 12px;}
+    .meta{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding:10px 18px;background:#fafafa;}
+    .chip{display:inline-flex;gap:8px;align-items:center;padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:#fff;color:var(--muted);font-size:13px;}
+    .progress{margin-left:auto;color:var(--muted);font-size:13px;}
+    .nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;}
+    .nav a{text-decoration:none;color:var(--accent);font-weight:650;border:1px solid #e0d7f5;background:#fff;border-radius:999px;padding:6px 10px;font-size:13px;}
+    .nav a:hover{background:#f6f0ff;}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;margin:12px 0;}
+    .q-title{font-weight:650;margin:0 0 10px;font-size:15px;}
+    .q-num{color:var(--accent);font-weight:800;margin-right:6px;}
+    fieldset{border:0;padding:0;margin:0;min-width:0;}
+    .opt{display:flex;align-items:flex-start;gap:10px;padding:8px 10px;border-radius:10px;border:1px solid transparent;transition:background .15s ease,border .15s ease;cursor:pointer;}
+    .opt:hover{background:#f6f0ff;border-color:#e7dbff;}
+    input[type="radio"]{margin-top:2px;accent-color:var(--accent);transform:scale(1.05);}
+    label{cursor:pointer;width:100%;}
+    .missing{border-color:var(--danger)!important;box-shadow:0 0 0 3px rgba(217,48,37,.10);}
+    .hint{color:var(--danger);font-size:12px;margin-top:8px;display:none;}
+    .card.missing .hint{display:block;}
+
+    /* după submit */
+    .opt.correct{border-color: rgba(30,142,62,.35);background: rgba(30,142,62,.08);}
+    .opt.wrong{border-color: rgba(217,48,37,.35);background: rgba(217,48,37,.08);}
+    .answerBox{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#fafafa;font-size:13px;color:var(--muted);}
+    .answerBox b{color:var(--text);}
+
+    .form-row{display:flex;gap:12px;flex-wrap:wrap;}
+    .input{flex:1 1 260px;display:flex;flex-direction:column;gap:6px;}
+    .input label{font-size:12px;color:var(--muted);cursor:default;}
+    .input input{padding:10px 12px;border-radius:10px;border:1px solid var(--border);outline:none;font-size:14px;background:#fff;}
+    .input input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(103,58,183,.12);}
+    .actions{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px;}
+    .btn{border:0;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer;font-size:14px;transition:transform .05s ease,opacity .2s ease,background .2s ease;display:inline-flex;align-items:center;gap:10px;}
+    .btn:active{transform:translateY(1px);}
+    .btn-primary{background:var(--accent);color:#fff;}
+    .btn-primary:hover{background:#5a2fb0;}
+    .btn-ghost{background:#fff;color:var(--accent);border:1px solid #e0d7f5;}
+    .btn-ghost:hover{background:#f6f0ff;}
+    .note{color:var(--muted);font-size:13px;}
+    .score{display:none;text-align:center;padding:18px;border:1px solid #d7f0dd;background:#f4fbf6;}
+    .score h2{margin:6px 0 10px;font-size:20px;}
+    .score .big{font-size:40px;font-weight:900;color:var(--ok);margin:0;}
+    .score .small{margin:8px 0 0;color:var(--muted);font-size:13px;}
+    details{margin-top:10px;color:var(--muted);font-size:13px;}
+    details summary{cursor:pointer;color:var(--accent);font-weight:700;}
+    .disabled{opacity:.85;pointer-events:none;user-select:none;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div class="topbar"></div>
+      <div class="head-body">
+        <h1>⛰️ Chestionar: munte, drumeție & siguranță</h1>
+        <p class="subtitle">50 de întrebări • orientare, meteo, echipament, risc • după „Trimite” vezi punctajul + corecturile.</p>
+
+        <div class="nav" aria-label="Navigare">
+          <a href="index.html">🏠 Meniu</a>
+          <a href="chestionariepuri.html">🐇 Iepuri</a>
+          <a href="chestionarmunte.html">⛰️ Munte</a>
+          <a href="chestionariepure+munte.html">🐇⛰️ Combinat</a>
+        </div>
+
+        <div class="form-row" style="margin-top:12px">
+          <div class="input">
+            <label for="name">Nume (opțional)</label>
+            <input id="name" type="text" placeholder="Ex: Andrei Popescu" autocomplete="name" />
+          </div>
+          <div class="input">
+            <label for="email">Email (opțional)</label>
+            <input id="email" type="email" placeholder="Ex: nume@exemplu.ro" autocomplete="email" />
+          </div>
+        </div>
+      </div>
+      <div class="meta">
+        <span class="chip">📋 Tip: grilă (o singură variantă / întrebare)</span>
+        <span class="chip">✅ Punctaj: 1 punct / întrebare</span>
+        <span id="progress" class="progress">Completate: 0/50</span>
+      </div>
+    </div>
+
+    <div id="scoreCard" class="card score" aria-live="polite">
+      <h2>Rezultat final</h2>
+      <p class="big" id="scoreText">0 / 50</p>
+      <p class="small">După “Trimite”, ai și răspunsurile corecte marcate mai jos.</p>
+    </div>
+
+    <form id="quizForm" novalidate>
+      <div id="questions"></div>
+
+      <div class="card">
+        <div class="actions">
+          <button type="button" class="btn btn-ghost" id="resetBtn">Resetează (random nou)</button>
+          <div class="note" id="statusNote">Completează toate întrebările, apoi apasă „Trimite”.</div>
+          <button type="submit" class="btn btn-primary" id="submitBtn">Trimite</button>
+        </div>
+
+        <details>
+          <summary>Surse / ghiduri (pentru documentare)</summary>
+          <ul>
+            <li>National Park Service / ghiduri drumeție și siguranță în natură</li>
+<li>NOAA / resurse meteo – furtuni, fulgere, explicarea fronturilor</li>
+<li>Leave No Trace – principiile LNT pentru camping și trasee</li>
+<li>UIAA / resurse montane – echipament, riscuri, bune practici</li>
+<li>Servicii de salvare montană (ex. Salvamont) – recomandări de pregătire și siguranță</li>
+          </ul>
+        </details>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Întrebările + opțiunile sunt amestecate random la fiecare încărcare/reset.
+    const QUESTIONS = [{"text":"Ce proces geologic formează de obicei munții de tip „fold” (lanțuri cutate)?","options":["Ciocnirea plăcilor tectonice și compresia","Doar eroziunea vântului","Topirea ghețarilor în mare","Impactul meteoriților în fiecare an"],"correct":0},{"text":"Carpații fac parte, în linii mari, din zona de orogeneză asociată cu:","options":["Orogeneza alpină (Alpine)","Orogeneza caledoniană","Orogeneza hercinică exclusivă","Nu au legătură cu tectonica"],"correct":0},{"text":"Cel mai înalt vârf din România este:","options":["Moldoveanu","Negoiu","Omu","Parângul Mare"],"correct":0},{"text":"Pe măsură ce urci în altitudine, presiunea atmosferică și oxigenul disponibil:","options":["Scad","Cresc","Rămân identice","Devine zero imediat"],"correct":0},{"text":"Răul acut de altitudine apare în principal din cauza:","options":["Scăderii presiunii parțiale a oxigenului","Creșterii zahărului din sânge","Alergiei la soare","Lipsei totale a vântului"],"correct":0},{"text":"O regulă bună pentru aclimatizare este:","options":["Urcare treptată și zile de odihnă la altitudini mai mari","Urcare cât mai rapidă fără pauze","Somn la cea mai mare altitudine posibilă în prima zi","Evitarea apei"],"correct":0},{"text":"În drumeție, principiul celor „3 straturi” se referă la:","options":["Strat de bază, strat izolator, strat exterior (shell)","3 perechi de șosete groase","3 rucsacuri unul peste altul","3 sticle identice de apă"],"correct":0},{"text":"De ce este des recomandat să eviți bumbacul la munte?","options":["Reține umezeala și răcește corpul","Este prea ușor","Se usucă instant","Încălzește excesiv"],"correct":0},{"text":"Un semn comun de hipotermie moderată poate include:","options":["Confuzie și coordonare slabă","Piele foarte roșie de la căldură","Vedere perfectă","Sete zero"],"correct":0},{"text":"„Wind chill” descrie:","options":["Efectul vântului care crește pierderea de căldură și senzația de frig","Cantitatea de UV din aer","Numărul de nori","Nivelul de oxigen"],"correct":0},{"text":"În general, distanța dintre curbele de nivel pe hartă arată:","options":["Panta: curbe apropiate = abrupt","Altitudinea exactă a vârfului","Tipul de rocă","Direcția vântului"],"correct":0},{"text":"Ce instrument rămâne util pentru orientare chiar și fără semnal GSM?","options":["Harta tipărită + busola","Doar aplicația de social media","Bluetooth speaker","Cameră foto"],"correct":0},{"text":"Când folosești o busolă, trebuie să ții cont de:","options":["Devierea/declinația magnetică (unde e relevant)","Culoarea rucsacului","Tipul de șireturi","Lungimea bețelor"],"correct":0},{"text":"O regulă simplă pentru furtuni cu descărcări electrice este „30-30”:","options":["Dacă vezi fulger și auzi tunet sub 30 sec, caută adăpost; așteaptă 30 min după ultimul tunet","Stai 30 minute în apă","Allegi 30 pietre","Urcă 30 metri mai sus"],"correct":0},{"text":"În timpul unei furtuni cu fulgere, locurile cele mai periculoase includ:","options":["Creste expuse și copaci izolați","Pădure deasă uniformă","Văi largi joase","În interiorul unei clădiri"],"correct":0},{"text":"Cumulus care cresc rapid și se închid la culoare pot indica:","options":["Dezvoltare de furtună","Stabilitate totală","Vreme garantat senină 2 zile","Scădere de altitudine"],"correct":0},{"text":"Nori lenticulari (în formă de „lentilă”) sugerează adesea:","options":["Vânt puternic la altitudine și turbulențe","Plajă aproape","Calm total","Nicio legătură cu vântul"],"correct":0},{"text":"O scădere rapidă a presiunii barometrice poate semnala:","options":["Apropierea unui front și vreme mai rea","Vreme identică 7 zile","Creștere instantă a temperaturii nocturne","Zăpadă doar vara"],"correct":0},{"text":"„Turn-around time” în drumeție înseamnă:","options":["Ora limită la care te întorci indiferent de progres","Momentul când schimbi bocancii","Ora la care începi să mănânci","Când faci poze"],"correct":0},{"text":"„Cele 10 esențiale” (10 essentials) includ, în mod tipic:","options":["Navigație, iluminare, trusă prim ajutor, protecție meteo etc.","Consolă de jocuri, parfum, 3 tricouri","Doar apă și nimic altceva","Doar telefonul"],"correct":0},{"text":"Un semn comun de deshidratare este:","options":["Urina închisă la culoare și oboseală","Somnolență doar după masă","Păr lucios","Temperatură constantă"],"correct":0},{"text":"Metoda sigură de a face apă potabilă dintr-un izvor necunoscut poate fi:","options":["Filtrare/sterilizare sau fierbere","Doar mirosirea apei","Adăugarea de sare","Agitarea sticlei"],"correct":0},{"text":"În traversarea unui râu rece/rapid, o practică de siguranță este:","options":["Să desfaci centura de șold a rucsacului (și, după caz, chinga de piept)","Să sari cu ochii închiși","Să traversezi singur noaptea","Să cari pietre în brațe"],"correct":0},{"text":"În iarnă, riscul de avalanșă este adesea mai mare pe pante de aproximativ:","options":["30–45°","0–5°","60–80° mereu","Orice pantă plată"],"correct":0},{"text":"În teren înzăpezit, un factor important în evaluarea avalanșei este:","options":["Stratificarea și stabilitatea stratului de zăpadă","Culoarea rucsacului","Numărul de selfie-uri","Marca bocancilor"],"correct":0},{"text":"O vale glaciară tipică are profil:","options":["În U","În V","Pătrat perfect","Circular"],"correct":0},{"text":"O vale formată predominant de un râu are adesea profil:","options":["În V","În U","În W","În cerc"],"correct":0},{"text":"Talus/scree se referă la:","options":["Grohotiș/pietre instabile la baza versantului","Lac de munte","Pădure tropicală","Gheață subțire pe râu"],"correct":0},{"text":"Care accesoriu ajută la reducerea oboselii pe coborâri lungi?","options":["Bețe de trekking","Ochelari de soare pe ceafă","Căciulă foarte groasă vara","Un claxon"],"correct":0},{"text":"În caz că te rătăcești, metoda „STOP” înseamnă (în esență):","options":["Stop, Think, Observe, Plan","Sari, Treci, Ocolește, Pleacă","Strigă, Trage, Oprește, Pornește","Stai, Taci, Obosește, Plânge"],"correct":0},{"text":"Bateriile telefonului se consumă mai repede la frig deoarece:","options":["Capacitatea bateriei scade la temperaturi joase","Semnalul devine infinit","Ecranul devine mai mare","GPS-ul nu mai există"],"correct":0},{"text":"O practică utilă pentru a economisi bateria telefonului pe munte este:","options":["Mod avion + GPS doar la nevoie / power bank","Luminozitate maximă permanent","Streaming video continuu","Ținut în zăpadă"],"correct":0},{"text":"În general, radiația UV la altitudine:","options":["Este mai puternică, deci protecția solară contează","Este mereu zero","Depinde doar de pantofi","Nu afectează pielea"],"correct":0},{"text":"În managementul riscului, „planul B” într-o tură înseamnă:","options":["Rută alternativă/întoarcere în caz de vreme sau timp limitat","Încă un munte mai mare obligatoriu","Să ignori prognoza","Să pleci fără apă"],"correct":0},{"text":"Un semnal internațional de ajutor cu fluierul este adesea:","options":["3 sunete scurte repetate","1 sunet lung o dată","2 sunete și gata","Orice număr la întâmplare"],"correct":0},{"text":"În camping, o recomandare Leave No Trace este să campezi la aproximativ:","options":["60 m (200 ft) de surse de apă","1 m de râu","Direct în albie","În mijlocul potecii"],"correct":0},{"text":"Leave No Trace recomandă, în general, să:","options":["Împachetezi și să iei gunoiul cu tine","Îngropi plasticul","Arunci resturi în lac","Dai foc ambalajelor oriunde"],"correct":0},{"text":"În zone cu faună mare, depozitarea mâncării se face ideal:","options":["În recipient rezistent/loc sigur, departe de cort","În cort lângă sacul de dormit","La intrarea în potecă","Pe jos, lângă apă"],"correct":0},{"text":"Un semn timpuriu de degerătură poate fi:","options":["Amorțeală și piele palidă/cerată","Febră mare instant","Miros puternic de fum","Durere de dinți"],"correct":0},{"text":"Când cobori o pantă foarte abruptă, un principiu util este:","options":["Pași scurți și control, atenție la centrul de greutate","Alergi cât poți","Te lași pe spate excesiv","Închizi ochii"],"correct":0},{"text":"Microspikes/crampoane ușoare sunt folosite mai ales pentru:","options":["Aderență pe gheață/zăpadă bătătorită","Înot","Orientare astronomică","Gătit"],"correct":0},{"text":"Cramponii clasici sunt mai potriviți decât microspikes când:","options":["Ai gheață dură și pante mai serioase","E doar noroi","E asfalt","E plajă"],"correct":0},{"text":"Un motiv pentru care e periculos să stai pe creastă în furtună este:","options":["Ești mai expus la fulgere și vânt","Aerul e mai dulce","Ai semnal mai bun","E mai cald"],"correct":0},{"text":"O practică responsabilă înainte de tură este:","options":["Să lași cuiva ruta și ora estimată de întoarcere","Să nu spui nimănui nimic","Să pleci fără hartă","Să mergi fără încărcător"],"correct":0},{"text":"În caz de urgență în România, numărul unic este:","options":["112","911","999","110"],"correct":0},{"text":"Un risc comun pe timp de vară la altitudine include:","options":["Furtuni rapide de după-amiază","Avalanșe zilnice obligatorii","Lipsa totală a UV","Risc zero de deshidratare"],"correct":0},{"text":"Un element cheie pentru prevenirea bătăturilor este:","options":["Șosete potrivite + bocanci corect adaptați + opriri la timp","Strângi la maxim șireturile mereu","Mergi ud tot timpul","Ignori orice disconfort"],"correct":0},{"text":"Ce înseamnă, în practică, „mergi pe potecă” în arii sensibile?","options":["Reducerea eroziunii și protejarea vegetației","Doar ca să fie mai frumos în poze","Ca să nu îți murdărești bocancii","Nu are legătură cu mediul"],"correct":0},{"text":"Un indiciu că temperatura va scădea la apus este:","options":["Radiație nocturnă + vânt, mai ales pe creste","Soare puternic la prânz","Culoarea rucsacului","Numărul de pași"],"correct":0},{"text":"Dacă apare durere de cap + greață la altitudine, o măsură prudentă este:","options":["Oprire, hidratare și, dacă simptomele persistă, coborâre","Să urci mai repede","Să eviți apa","Să dormi pe vârf imediat"],"correct":0}];
+
+    // === RANDOM puternic (crypto) ===
+    function randInt(maxExclusive) {
+      if (maxExclusive <= 0) return 0;
+      const cryptoObj = window.crypto || window.msCrypto;
+      if (!cryptoObj || !cryptoObj.getRandomValues) {
+        return Math.floor(Math.random() * maxExclusive);
+      }
+      const range = 0x100000000; // 2^32
+      const limit = range - (range % maxExclusive);
+      const buf = new Uint32Array(1);
+      let x;
+      do {
+        cryptoObj.getRandomValues(buf);
+        x = buf[0];
+      } while (x >= limit);
+      return x % maxExclusive;
+    }
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = randInt(i + 1);
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+      }[c]));
+    }
+
+    const state = { rendered: [], answeredCount: 0, submitted: false, total: 50 };
+
+    const elQuestions = document.getElementById("questions");
+    const elProgress = document.getElementById("progress");
+    const elScoreCard = document.getElementById("scoreCard");
+    const elScoreText = document.getElementById("scoreText");
+    const form = document.getElementById("quizForm");
+    const resetBtn = document.getElementById("resetBtn");
+
+    function updateProgress() {
+      elProgress.textContent = `Completate: ${state.answeredCount}/${state.total}`;
+    }
+
+    function countAnswered() {
+      let c = 0;
+      state.rendered.forEach((_, idx) => {
+        if (form.querySelector(`input[name="q_${idx}"]:checked`)) c++;
+      });
+      state.answeredCount = c;
+      updateProgress();
+    }
+
+    function clearMissingMarks() {
+      document.querySelectorAll(".card.missing").forEach(c => c.classList.remove("missing"));
+    }
+
+    // 1) shuffle întrebări
+    // 2) shuffle opțiuni per întrebare
+    // 3) corectul se păstrează prin flag isCorrect
+    function buildRenderedQuestions() {
+      const qList = QUESTIONS.map(q => {
+        const opts = q.options.map((t, i) => ({ text: t, isCorrect: i === q.correct }));
+        shuffle(opts);
+        const correctIndex = opts.findIndex(o => o.isCorrect);
+        return { text: q.text, options: opts, correctIndex };
+      });
+      shuffle(qList);
+      return qList;
+    }
+
+    function render() {
+      elQuestions.innerHTML = "";
+      state.rendered = buildRenderedQuestions();
+      state.total = state.rendered.length;
+
+      state.rendered.forEach((item, idx) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.dataset.qIndex = idx;
+
+        const title = document.createElement("p");
+        title.className = "q-title";
+        title.innerHTML = `<span class="q-num">${idx + 1}.</span> ${escapeHtml(item.text)}`;
+        card.appendChild(title);
+
+        const fs = document.createElement("fieldset");
+        fs.setAttribute("role","radiogroup");
+
+        item.options.forEach((opt, oIdx) => {
+          const optId = `q_${idx}_opt_${oIdx}`;
+
+          const wrap = document.createElement("div");
+          wrap.className = "opt";
+          wrap.dataset.optIndex = String(oIdx);
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = `q_${idx}`;
+          radio.id = optId;
+          radio.value = String(oIdx);
+
+          radio.addEventListener("change", () => {
+            if (state.submitted) return;
+            card.classList.remove("missing");
+            countAnswered();
+          });
+
+          const label = document.createElement("label");
+          label.setAttribute("for", optId);
+          label.textContent = opt.text;
+
+          wrap.appendChild(radio);
+          wrap.appendChild(label);
+          fs.appendChild(wrap);
+        });
+
+        const hint = document.createElement("div");
+        hint.className = "hint";
+        hint.textContent = "Întrebare obligatorie (alege o variantă).";
+
+        const answerBox = document.createElement("div");
+        answerBox.className = "answerBox";
+        answerBox.id = `answer_${idx}`;
+
+        card.appendChild(fs);
+        card.appendChild(hint);
+        card.appendChild(answerBox);
+        elQuestions.appendChild(card);
+      });
+
+      state.answeredCount = 0;
+      updateProgress();
+    }
+
+    function validateAllAnswered() {
+      clearMissingMarks();
+      let firstMissing = null;
+
+      state.rendered.forEach((_, idx) => {
+        const checked = form.querySelector(`input[name="q_${idx}"]:checked`);
+        if (!checked) {
+          const card = form.querySelector(`.card[data-q-index="${idx}"]`);
+          if (card) card.classList.add("missing");
+          if (!firstMissing) firstMissing = card;
+        }
+      });
+
+      if (firstMissing) {
+        firstMissing.scrollIntoView({behavior:"smooth", block:"center"});
+        return false;
+      }
+      return true;
+    }
+
+    function computeScore() {
+      let score = 0;
+      state.rendered.forEach((item, idx) => {
+        const checked = form.querySelector(`input[name="q_${idx}"]:checked`);
+        const chosen = checked ? Number(checked.value) : -1;
+        if (chosen === item.correctIndex) score++;
+      });
+      return score;
+    }
+
+    function showCorrectAnswers() {
+      state.rendered.forEach((item, idx) => {
+        const checked = form.querySelector(`input[name="q_${idx}"]:checked`);
+        const chosen = checked ? Number(checked.value) : -1;
+
+        const card = form.querySelector(`.card[data-q-index="${idx}"]`);
+        if (!card) return;
+
+        const opts = card.querySelectorAll(".opt");
+        opts.forEach(optEl => {
+          const oIdx = Number(optEl.dataset.optIndex);
+          optEl.classList.remove("correct","wrong");
+          if (oIdx === item.correctIndex) optEl.classList.add("correct");
+          if (chosen !== item.correctIndex && oIdx === chosen) optEl.classList.add("wrong");
+        });
+
+        const correctText = item.options[item.correctIndex]?.text ?? "";
+        const chosenText = (chosen >= 0 && item.options[chosen]) ? item.options[chosen].text : "—";
+
+        const box = document.getElementById(`answer_${idx}`);
+        if (box) {
+          box.innerHTML =
+            `<div><b>Răspuns corect:</b> ${escapeHtml(correctText)}</div>` +
+            `<div style="margin-top:6px"><b>Răspunsul tău:</b> ${escapeHtml(chosenText)}</div>`;
+          box.style.display = "block";
+        }
+      });
+    }
+
+    function lockForm() {
+      state.submitted = true;
+      form.querySelectorAll("input, button").forEach(el => {
+        if (el.id === "resetBtn") return;
+        el.disabled = true;
+      });
+      document.getElementById("questions").classList.add("disabled");
+    }
+
+    function unlockAndReset() {
+      state.submitted = false;
+      form.querySelectorAll("input, button").forEach(el => el.disabled = false);
+      document.getElementById("questions").classList.remove("disabled");
+      elScoreCard.style.display = "none";
+      clearMissingMarks();
+      render(); // random nou
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (state.submitted) return;
+
+      if (!validateAllAnswered()) return;
+
+      const score = computeScore();
+      const total = state.total;
+
+      elScoreText.textContent = `${score} / ${total}`;
+      elScoreCard.style.display = "block";
+
+      showCorrectAnswers();
+      lockForm();
+      elScoreCard.scrollIntoView({behavior:"smooth", block:"center"});
+    });
+
+    resetBtn.addEventListener("click", () => unlockAndReset());
+
+    render();
+  </script>
+</body>
+</html>

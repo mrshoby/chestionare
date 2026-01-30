@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chestionar Iepuri (50)</title>
+  <style>
+    :root{
+      --bg:#f1f3f4; --card:#ffffff; --text:#202124; --muted:#5f6368;
+      --accent:#673ab7; --accent-2:#7e57c2; --danger:#d93025; --ok:#1e8e3e;
+      --border:#dadce0; --shadow:0 1px 2px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.06);
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.35;}
+    .wrap{max-width:900px;margin:28px auto 64px;padding:0 14px;}
+    .header{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:var(--card);border:1px solid var(--border);margin-bottom:16px;}
+    .topbar{height:10px;background:linear-gradient(90deg,var(--accent),var(--accent-2));}
+    .head-body{padding:18px 18px 14px;}
+    h1{margin:0 0 6px;font-size:22px;font-weight:750;}
+    .subtitle{color:var(--muted);font-size:14px;margin:0 0 12px;}
+    .meta{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding:10px 18px;background:#fafafa;}
+    .chip{display:inline-flex;gap:8px;align-items:center;padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:#fff;color:var(--muted);font-size:13px;}
+    .progress{margin-left:auto;color:var(--muted);font-size:13px;}
+    .nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;}
+    .nav a{text-decoration:none;color:var(--accent);font-weight:650;border:1px solid #e0d7f5;background:#fff;border-radius:999px;padding:6px 10px;font-size:13px;}
+    .nav a:hover{background:#f6f0ff;}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;margin:12px 0;}
+    .q-title{font-weight:650;margin:0 0 10px;font-size:15px;}
+    .q-num{color:var(--accent);font-weight:800;margin-right:6px;}
+    fieldset{border:0;padding:0;margin:0;min-width:0;}
+    .opt{display:flex;align-items:flex-start;gap:10px;padding:8px 10px;border-radius:10px;border:1px solid transparent;transition:background .15s ease,border .15s ease;cursor:pointer;}
+    .opt:hover{background:#f6f0ff;border-color:#e7dbff;}
+    input[type="radio"]{margin-top:2px;accent-color:var(--accent);transform:scale(1.05);}
+    label{cursor:pointer;width:100%;}
+    .missing{border-color:var(--danger)!important;box-shadow:0 0 0 3px rgba(217,48,37,.10);}
+    .hint{color:var(--danger);font-size:12px;margin-top:8px;display:none;}
+    .card.missing .hint{display:block;}
+
+    /* după submit */
+    .opt.correct{border-color: rgba(30,142,62,.35);background: rgba(30,142,62,.08);}
+    .opt.wrong{border-color: rgba(217,48,37,.35);background: rgba(217,48,37,.08);}
+    .answerBox{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#fafafa;font-size:13px;color:var(--muted);}
+    .answerBox b{color:var(--text);}
+
+    .form-row{display:flex;gap:12px;flex-wrap:wrap;}
+    .input{flex:1 1 260px;display:flex;flex-direction:column;gap:6px;}
+    .input label{font-size:12px;color:var(--muted);cursor:default;}
+    .input input{padding:10px 12px;border-radius:10px;border:1px solid var(--border);outline:none;font-size:14px;background:#fff;}
+    .input input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(103,58,183,.12);}
+    .actions{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px;}
+    .btn{border:0;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer;font-size:14px;transition:transform .05s ease,opacity .2s ease,background .2s ease;display:inline-flex;align-items:center;gap:10px;}
+    .btn:active{transform:translateY(1px);}
+    .btn-primary{background:var(--accent);color:#fff;}
+    .btn-primary:hover{background:#5a2fb0;}
+    .btn-ghost{background:#fff;color:var(--accent);border:1px solid #e0d7f5;}
+    .btn-ghost:hover{background:#f6f0ff;}
+    .note{color:var(--muted);font-size:13px;}
+    .score{display:none;text-align:center;padding:18px;border:1px solid #d7f0dd;background:#f4fbf6;}
+    .score h2{margin:6px 0 10px;font-size:20px;}
+    .score .big{font-size:40px;font-weight:900;color:var(--ok);margin:0;}
+    .score .small{margin:8px 0 0;color:var(--muted);font-size:13px;}
+    details{margin-top:10px;color:var(--muted);font-size:13px;}
+    details summary{cursor:pointer;color:var(--accent);font-weight:700;}
+    .disabled{opacity:.85;pointer-events:none;user-select:none;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div class="topbar"></div>
+      <div class="head-body">
+        <h1>🐇 Chestionar: iepuri în natură & vânătoare responsabilă</h1>
+        <p class="subtitle">50 de întrebări • întrebările și opțiunile sunt random • după „Trimite” vezi punctajul + corecturile.</p>
+
+        <div class="nav" aria-label="Navigare">
+          <a href="index.html">🏠 Meniu</a>
+          <a href="chestionariepuri.html">🐇 Iepuri</a>
+          <a href="chestionarmunte.html">⛰️ Munte</a>
+          <a href="chestionariepure+munte.html">🐇⛰️ Combinat</a>
+        </div>
+
+        <div class="form-row" style="margin-top:12px">
+          <div class="input">
+            <label for="name">Nume (opțional)</label>
+            <input id="name" type="text" placeholder="Ex: Andrei Popescu" autocomplete="name" />
+          </div>
+          <div class="input">
+            <label for="email">Email (opțional)</label>
+            <input id="email" type="email" placeholder="Ex: nume@exemplu.ro" autocomplete="email" />
+          </div>
+        </div>
+      </div>
+      <div class="meta">
+        <span class="chip">📋 Tip: grilă (o singură variantă / întrebare)</span>
+        <span class="chip">✅ Punctaj: 1 punct / întrebare</span>
+        <span id="progress" class="progress">Completate: 0/50</span>
+      </div>
+    </div>
+
+    <div id="scoreCard" class="card score" aria-live="polite">
+      <h2>Rezultat final</h2>
+      <p class="big" id="scoreText">0 / 50</p>
+      <p class="small">După “Trimite”, ai și răspunsurile corecte marcate mai jos.</p>
+    </div>
+
+    <form id="quizForm" novalidate>
+      <div id="questions"></div>
+
+      <div class="card">
+        <div class="actions">
+          <button type="button" class="btn btn-ghost" id="resetBtn">Resetează (random nou)</button>
+          <div class="note" id="statusNote">Completează toate întrebările, apoi apasă „Trimite”.</div>
+          <button type="submit" class="btn btn-primary" id="submitBtn">Trimite</button>
+        </div>
+
+        <details>
+          <summary>Surse / ghiduri (pentru documentare)</summary>
+          <ul>
+            <li>RSPCA – informații despre iepure vs iepure de câmp (hares) și levereți</li>
+<li>Animal Diversity Web – fișe de specie (Lagomorpha)</li>
+<li>WOAH – myxomatosis și rabbit haemorrhagic disease (RHD/RHDV2)</li>
+<li>Hunter Education / IHEA – reguli generale de siguranță și etică</li>
+<li>CDC / ghiduri sănătate publică – recomandări de igienă la carne de vânat</li>
+          </ul>
+        </details>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Întrebările + opțiunile sunt amestecate random la fiecare încărcare/reset.
+    const QUESTIONS = [{"text":"În general, ce diferență clasică există între iepure (rabbit) și iepure de câmp (hare)?","options":["Harele își face cuib în copac","Harele se bazează mai mult pe viteză și „forms”, nu pe vizuini complexe","Iepurele hibernează, harele nu","Iepurele este carnivor"],"correct":1},{"text":"Iepurele european (Oryctolagus cuniculus) este cunoscut în natură pentru:","options":["Rețele de vizuini (warrens)","Viață exclusiv acvatică","Cuiburi suspendate","Hibernare profundă"],"correct":0},{"text":"Iepurele de câmp se odihnește frecvent ziua într-o:","options":["Vizuina adâncă săpată","Depresiune superficială în sol/iarbă („formă”)","Scorbura unui copac","Cuib plutitor"],"correct":1},{"text":"Care dintre opțiuni descrie cel mai bine activitatea zilnică a iepurilor/iepurilor de câmp?","options":["Predominant diurnă la prânz","Crepusculară/nocturnă (mai activi seara/noaptea)","Doar dimineața devreme, apoi hibernează","Doar în timpul furtunilor"],"correct":1},{"text":"Dieta naturală tipică pentru iepuri și iepuri de câmp este:","options":["Preponderent carnivoră","Preponderent erbivoră (ierburi/plante)","Exclusiv insectivoră","Exclusiv piscivoră"],"correct":1},{"text":"În sezon rece, iepurele de câmp poate consuma mai mult:","options":["Scoarță, muguri și lăstari","Doar fructe tropicale","Doar pește","Exclusiv ciuperci toxice"],"correct":0},{"text":"Ce rol au urechile mari la iepuri/iepurii de câmp în natură?","options":["Doar pentru echilibru la sărituri","Detectarea prădătorilor (auz) și termoreglare","Pentru a speria prădătorii prin culoare","Pentru a săpa vizuini"],"correct":1},{"text":"Care afirmație e cea mai probabilă despre habitatul iepurelui de câmp?","options":["Preferă câmpuri/pajiști, adesea lângă margini de vegetație (gard viu/lizieră)","Trăiește doar în păduri dese tropicale","Trăiește exclusiv pe stânci fără vegetație","Trăiește doar în peșteri"],"correct":0},{"text":"De ce sunt importante marginea de câmp, tufărișul și gardurile vii pentru iepurele de câmp?","options":["Oferă acoperire și rute de deplasare","Îl obligă să hibernează","Îi elimină hrana","Îl fac să trăiască în apă"],"correct":0},{"text":"Când un iepure stă nemișcat și se bazează pe camuflaj, acesta este un exemplu de:","options":["Apărare prin cripticitate (camuflaj)","Comportament de vânătoare activă","Hibernare","Migrație"],"correct":0},{"text":"Comportamentul numit „boxing” la iepurele de câmp este asociat mai ales cu:","options":["Sezonul de reproducere și interacțiuni între indivizi","Construirea vizuinilor","Înotul în grup","Hibernarea"],"correct":0},{"text":"Care adaptare ajută iepurele de câmp în teren deschis?","options":["Picioare lungi pentru alergare rapidă și evaziune","Gheare pentru cățărat în copaci","Aripi","Branhii"],"correct":0},{"text":"În general, iepurii (rabbits) sunt mai cunoscuți pentru:","options":["Viață socială mai pronunțată și folosirea vizuinilor comune","Viață exclusiv solitară fără adăpost","Hibernare în colonii","Hrănire exclusiv cu insecte"],"correct":0},{"text":"Care afirmație despre puii de iepure de câmp (leverets) e corectă, în mod general?","options":["Se nasc orbi și fără blană","Se nasc cu ochii deschiși și cu blană","Sunt depuși în ouă","Sunt complet independenți după 10 minute"],"correct":1},{"text":"Care afirmație despre puii de iepure (kits/kittens) e corectă, în mod general?","options":["Se nasc orbi și aproape fără blană, în cuib/vizuină","Se nasc cu ochii deschiși și aleargă imediat","Se nasc în apă","Sunt întotdeauna abandonați"],"correct":0},{"text":"Dacă găsești un leveret aparent singur, o explicație posibil normală este:","options":["Mama îl lasă ascuns și revine periodic să îl hrănească","Este abandonat sigur","Nu are mamă","Este deja adult"],"correct":0},{"text":"De ce intervenția „din milă” asupra unui leveret aparent sănătos poate fi greșită?","options":["Poate fi normal să stea ascuns; intervenția poate crește stresul și riscul","Pentru că levereții sunt periculoși","Pentru că nu există levereți","Pentru că mama nu revine niciodată"],"correct":0},{"text":"Un rol ecologic comun al iepurilor/iepurilor de câmp este:","options":["Pradă importantă pentru prădători și influențarea vegetației","Prădător de vârf al ecosistemului","Fără rol în lanțul trofic","Consumator exclusiv de pești"],"correct":0},{"text":"În urmele tipice de sărit (salt) la iepure/hare, de obicei:","options":["Urmele din spate cad înaintea celor din față","Urmele din față cad înaintea celor din spate mereu","Se vede o singură urmă","Se vede urma cozii în mod constant"],"correct":0},{"text":"Un set clasic de urme de iepure/hare la deplasare arată adesea:","options":["4 amprente (2 față + 2 spate)","2 amprente identice","6 amprente fixe","O urmă continuă de coadă"],"correct":0},{"text":"Unde vezi cel mai ușor urmele proaspete ale iepurilor?","options":["Zăpadă, noroi umed, praf fin","Asfalt uscat lucios","Apă foarte adâncă","În aer"],"correct":0},{"text":"Excrementele tipice de iepure sunt descrise cel mai des ca:","options":["Peleți mici și rotunzi/ovalizați","Fire lungi, torsionate","Excremente lichide","Bucăți mari de 5–10 cm"],"correct":0},{"text":"Un indiciu de prezență repetată într-o zonă poate fi:","options":["Concentrații de peleți (latrine) și poteci (runways)","Doar pene de pasăre","Doar urme de copite","Lipsa totală a oricăror semne"],"correct":0},{"text":"Semnul de hrănire numit „browse” pe lăstari tineri poate arăta:","options":["Tăietură relativ curată, adesea în unghi","Rupere foarte zdrențuită ca după furtună","Arsură pe scoarță","Găuri perfect circulare ca burghiul"],"correct":0},{"text":"Ce înseamnă, de regulă, „runways” pentru iepuri?","options":["Poteci înguste folosite repetat prin iarbă/vegetatie","Tuneluri subacvatice","Drumuri asfaltate","Trasee exclusiv în copaci"],"correct":0},{"text":"„Formă” (form) în contextul iepurelui de câmp înseamnă:","options":["O depresiune superficială de odihnă/camuflaj","O vizuină complexă cu mai multe camere","Un cuib suspendat","O gaură în gheață"],"correct":0},{"text":"Când identifici o specie în teren, ce abordare e cea mai responsabilă?","options":["Te bazezi pe o singură caracteristică","Folosești mai multe indicii: dimensiune, urechi, habitat, comportament, urme","Presupui mereu că e specia vânată","Ignori complet habitatul"],"correct":1},{"text":"Un motiv bun să eviți presupunerile la identificare este:","options":["Unele specii pot fi protejate sau au reguli diferite","Pentru că toate speciile au aceleași reguli","Pentru că nu contează legal","Pentru că se schimbă anotimpul"],"correct":0},{"text":"Myxomatosis (la iepuri) este cauzată de:","options":["Virus (poxvirus)","Deficit de minerale","Ciupercă de pădure","Intoxicație cu sare"],"correct":0},{"text":"Rabbit haemorrhagic disease (RHD/RHDV) este asociată cu:","options":["Un calicivirus (lagovirus)","Bacterie din apă dulce","Parazit extern (căpușă)","Alergie la polen"],"correct":0},{"text":"De ce bolile pot influența mult populațiile de iepuri în natură?","options":["Pot crește mortalitatea și reduce reproducerea","Nu au niciun efect","Fac iepurii invizibili","Elimină nevoia de hrană"],"correct":0},{"text":"Care este un exemplu comun de prădători pentru iepuri/iepurii de câmp (în funcție de regiune)?","options":["Vulpi și păsări răpitoare","Doar pești","Doar insecte","Nu au prădători naturali"],"correct":0},{"text":"Un semn că un animal poate fi bolnav și ar trebui evitat la manipulare este:","options":["Comportament anormal, apatie, leziuni evidente","Blană curată și alertă","Fuga rapidă","Urechi ridicate și vigilente"],"correct":0},{"text":"Tularemia (risc la iepure de vânat) este asociată adesea cu:","options":["Bacterie și expunere prin manipulare/consum insuficient gătit","Doar gripă sezonieră","Doar arsuri solare","Doar alergii alimentare"],"correct":0},{"text":"Măsură bună când manipulezi vânat (igienă) este:","options":["Mănuși + spălat mâini/unelte după curățare","Mănânci în timp ce cureți vânatul","Nu cureți uneltele niciodată","Atingi fața/ochii cu mâinile murdare"],"correct":0},{"text":"O recomandare generală pentru reducerea riscului alimentar la carnea de vânat este:","options":["Gătire temeinică și păstrare la rece","Consum crud ca să fie „mai natural”","Ținută la cald ore întregi","Spălată doar cu apă și gata"],"correct":0},{"text":"Regula de bază: cum tratezi orice armă, indiferent de situație?","options":["Ca și cum ar fi încărcată","Ca și cum ar fi o jucărie","Ca și cum nu poate trage","Ca și cum nu are țeavă"],"correct":0},{"text":"Controlul țevii (muzzle control) înseamnă:","options":["Țeava îndreptată mereu într-o direcție sigură","Țeava spre sol și oameni, ca să fie stabil","Țeava în sus în orice situație","Țeava spre țintă înainte să identifici"],"correct":0},{"text":"Disciplina trăgaciului înseamnă:","options":["Degetul în afara trăgaciului până ești gata să tragi","Degetul pe trăgaci tot timpul","Apeși trăgaciul pentru test","Nu folosești niciodată trăgaciul"],"correct":0},{"text":"Regula „sigur de țintă și ce e dincolo” (target & beyond) cere:","options":["Să identifici clar ținta și să ai fundal/backstop sigur","Să tragi la mișcare","Să tragi dacă auzi sunet","Să tragi doar în sus"],"correct":0},{"text":"Dacă vezi doar o siluetă/mișcare în vegetație, cea mai sigură decizie este:","options":["Nu tragi până nu identifici complet","Tragi rapid înainte să fugă","Strigi și tragi","Tragi după sunet"],"correct":0},{"text":"De ce se folosește „blaze orange” în multe contexte de vânătoare?","options":["Crește vizibilitatea între oameni și reduce accidentele","Sperie toate animalele prin magie","Îți dă noroc","Îți încălzește corpul"],"correct":0},{"text":"La trecerea peste obstacole (garduri/șanțuri), o practică de siguranță este:","options":["Să descarci/controlezi arma și să o manevrezi în siguranță","Să sari cu arma încărcată și degetul pe trăgaci","Să arunci arma peste gard","Să lași arma pe sol fără control"],"correct":0},{"text":"Etică („fair chase”) înseamnă cel mai bine:","options":["Să respecți șanse rezonabile pentru vânat și să eviți avantaje neloiale/periculoase","Să faci orice ca să ai 100% succes","Să vânezi doar din mașină","Să ignori recuperarea vânatului"],"correct":0},{"text":"O decizie etică privind tragerea este:","options":["Nu tragi dacă nu poți asigura o recoltare rapidă și umană","Tragi oricum, poate nimerești","Tragi la distanțe necontrolate","Tragi fără fundal"],"correct":0},{"text":"După o lovire, responsabilitatea vânătorului este:","options":["Să urmărească și să recupereze vânatul cât mai prompt","Să plece imediat acasă","Să ignore locul","Să caute alt vânat fără verificare"],"correct":0},{"text":"De ce trebuie verificată legislația locală (sezon/cote/metode)?","options":["Pentru legalitate și managementul durabil al faunei","Nu e necesar niciodată","Doar pentru tradiție","Ca să schimbi vremea"],"correct":0},{"text":"Pe teren privat, regula generală este:","options":["Ai nevoie de permisiunea proprietarului/administratorului","Poți intra oricând fără acord","Doar faci o poză și e ok","Îți ajunge o hartă"],"correct":0},{"text":"O regulă bună de siguranță legată de alcool/substanțe înainte de vânătoare este:","options":["Evită complet — afectează judecata și reflexele","E ok în cantități mari","Ajută la țintire","E obligatoriu pentru concentrare"],"correct":0},{"text":"O practică responsabilă cu deșeurile după vânătoare este:","options":["Nu lași gunoaie și respecți mediul (Leave No Trace)","Lași cartușe și ambalaje pe jos","Arunci orice în apă","Ascunzi gunoaiele sub frunze"],"correct":0}];
+
+    // === RANDOM puternic (crypto) ===
+    function randInt(maxExclusive) {
+      if (maxExclusive <= 0) return 0;
+      const cryptoObj = window.crypto || window.msCrypto;
+      if (!cryptoObj || !cryptoObj.getRandomValues) {
+        return Math.floor(Math.random() * maxExclusive);
+      }
+      const range = 0x100000000; // 2^32
+      const limit = range - (range % maxExclusive);
+      const buf = new Uint32Array(1);
+      let x;
+      do {
+        cryptoObj.getRandomValues(buf);
+        x = buf[0];
+      } while (x >= limit);
+      return x % maxExclusive;
+    }
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = randInt(i + 1);
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+      }[c]));
+    }
+
+    const state = { rendered: [], answeredCount: 0, submitted: false, total: 50 };
+
+    const elQuestions = document.getElementById("questions");
+    const elProgress = document.getElementById("progress");
+    const elScoreCard = document.getElementById("scoreCard");
+    const elScoreText = document.getElementById("scoreText");
+    const form = document.getElementById("quizForm");
+    const resetBtn = document.getElementById("resetBtn");
+
+    function updateProgress() {
+      elProgress.textContent = `Completate: ${state.answeredCount}/${state.total}`;
+    }
+
+    function countAnswered() {
+      let c = 0;
+      state.rendered.forEach((_, idx) => {
+        if (form.querySelector(`input[name="q_${idx}"]:checked`)) c++;
+      });
+      state.answeredCount = c;
+      updateProgress();
+    }
+
+    function clearMissingMarks() {
+      document.querySelectorAll(".card.missing").forEach(c => c.classList.remove("missing"));
+    }
+
+    // 1) shuffle întrebări
+    // 2) shuffle opțiuni per întrebare
+    // 3) corectul se păstrează prin flag isCorrect
+    function buildRenderedQuestions() {
+      const qList = QUESTIONS.map(q => {
+        const opts = q.options.map((t, i) => ({ text: t, isCorrect: i === q.correct }));
+        shuffle(opts);
+        const correctIndex = opts.findIndex(o => o.isCorrect);
+        return { text: q.text, options: opts, correctIndex };
+      });
+      shuffle(qList);
+      return qList;
+    }
+
+    function render() {
+      elQuestions.innerHTML = "";
+      state.rendered = buildRenderedQuestions();
+      state.total = state.rendered.length;
+
+      state.rendered.forEach((item, idx) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.dataset.qIndex = idx;
+
+        const title = document.createElement("p");
+        title.className = "q-title";
+        title.innerHTML = `<span class="q-num">${idx + 1}.</span> ${escapeHtml(item.text)}`;
+        card.appendChild(title);
+
+        const fs = document.createElement("fieldset");
+        fs.setAttribute("role","radiogroup");
+
+        item.options.forEach((opt, oIdx) => {
+          const optId = `q_${idx}_opt_${oIdx}`;
+
+          const wrap = document.createElement("div");
+          wrap.className = "opt";
+          wrap.dataset.optIndex = String(oIdx);
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = `q_${idx}`;
+          radio.id = optId;
+          radio.value = String(oIdx);
+
+          radio.addEventListener("change", () => {
+            if (state.submitted) return;
+            card.classList.remove("missing");
+            countAnswered();
+          });
+
+          const label = document.createElement("label");
+          label.setAttribute("for", optId);
+          label.textContent = opt.text;
+
+          wrap.appendChild(radio);
+          wrap.appendChild(label);
+          fs.appendChild(wrap);
+        });
+
+        const hint = document.createElement("div");
+        hint.className = "hint";
+        hint.textContent = "Întrebare obligatorie (alege o variantă).";
+
+        const answerBox = document.createElement("div");
+        answerBox.className = "answerBox";
+        answerBox.id = `answer_${idx}`;
+
+        card.appendChild(fs);
+        card.appendChild(hint);
+        card.appendChild(answerBox);
+        elQuestions.appendChild(card);
+      });
+
+      state.answeredCount = 0;
+      updateProgress();
+    }
+
+    function validateAllAnswered() {
+      clearMissingMarks();
+      let firstMissing = null;
+
+      state.rendered.forEach((_, idx) => {
+        const checked = form.querySelector(`input[name="q_${idx}"]:checked`);
+        if (!checked) {
+          const card = form.querySelector(`.card[data-q-index="${idx}"]`);
+          if (card) card.classList.add("missing");
+          if (!firstMissing) firstMissing = card;
+        }
+      });
+
+      if (firstMissing) {
+        firstMissing.scrollIntoView({behavior:"smooth", block:"center"});
+        return false;
+      }
+      return true;
+    }
+
+    function computeScore() {
+      let score = 0;
+      state.rendered.forEach((item, idx) => {
+        const checked = form.querySelector(`input[name="q_${idx}"]:checked`);
+        const chosen = checked ? Number(checked.value) : -1;
+        if (chosen === item.correctIndex) score++;
+      });
+      return score;
+    }
+
+    function showCorrectAnswers() {
+      state.rendered.forEach((item, idx) => {
+        const checked = form.querySelector(`input[name="q_${idx}"]:checked`);
+        const chosen = checked ? Number(checked.value) : -1;
+
+        const card = form.querySelector(`.card[data-q-index="${idx}"]`);
+        if (!card) return;
+
+        const opts = card.querySelectorAll(".opt");
+        opts.forEach(optEl => {
+          const oIdx = Number(optEl.dataset.optIndex);
+          optEl.classList.remove("correct","wrong");
+          if (oIdx === item.correctIndex) optEl.classList.add("correct");
+          if (chosen !== item.correctIndex && oIdx === chosen) optEl.classList.add("wrong");
+        });
+
+        const correctText = item.options[item.correctIndex]?.text ?? "";
+        const chosenText = (chosen >= 0 && item.options[chosen]) ? item.options[chosen].text : "—";
+
+        const box = document.getElementById(`answer_${idx}`);
+        if (box) {
+          box.innerHTML =
+            `<div><b>Răspuns corect:</b> ${escapeHtml(correctText)}</div>` +
+            `<div style="margin-top:6px"><b>Răspunsul tău:</b> ${escapeHtml(chosenText)}</div>`;
+          box.style.display = "block";
+        }
+      });
+    }
+
+    function lockForm() {
+      state.submitted = true;
+      form.querySelectorAll("input, button").forEach(el => {
+        if (el.id === "resetBtn") return;
+        el.disabled = true;
+      });
+      document.getElementById("questions").classList.add("disabled");
+    }
+
+    function unlockAndReset() {
+      state.submitted = false;
+      form.querySelectorAll("input, button").forEach(el => el.disabled = false);
+      document.getElementById("questions").classList.remove("disabled");
+      elScoreCard.style.display = "none";
+      clearMissingMarks();
+      render(); // random nou
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (state.submitted) return;
+
+      if (!validateAllAnswered()) return;
+
+      const score = computeScore();
+      const total = state.total;
+
+      elScoreText.textContent = `${score} / ${total}`;
+      elScoreCard.style.display = "block";
+
+      showCorrectAnswers();
+      lockForm();
+      elScoreCard.scrollIntoView({behavior:"smooth", block:"center"});
+    });
+
+    resetBtn.addEventListener("click", () => unlockAndReset());
+
+    render();
+  </script>
+</body>
+</html>
